@@ -47,14 +47,13 @@ ungrouped:
 Create the file `vars.yaml`.
 
 ```
-force_https: false
+force_https: true
 
-cert_resolver: file
+lets_encrypt_email: acme@tell.nu
+
+cert_from_file: true
 cert_fullchain: /etc/letsencrypt/live/example.com/fullchain.pem
 cert_privkey: /etc/letsencrypt/live/example.com/privkey.pem
-
-# cert_resolver: lets_encrypt
-# lets_encrypt_email: acme@example.com
 
 dashboard_domain: 'traefik.example.com'
 ```

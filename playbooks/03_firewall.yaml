@@ -20,20 +20,25 @@
         rule: allow
         port: https
 
-    - name: Allow access to port HTTP/8000
-      community.general.ufw: 
-        rule: allow 
-        port: 8000
-
-    - name: Allow access to port HTTPS/4343
-      community.general.ufw:
-        rule: allow
-        port: 4343
-
-    - name: Allow access to port HTTP/8080
+    - name: Allow access to port 8080
       community.general.ufw: 
         rule: allow 
         port: 8080
+
+    - name: Allow access to port 8443
+      community.general.ufw:
+        rule: allow
+        port: 8443
+
+    - name: Allow access to port 9080
+      community.general.ufw: 
+        rule: allow 
+        port: 9080
+
+    - name: Allow access to port 9443
+      community.general.ufw: 
+        rule: allow 
+        port: 9443
 
     - name: Enable port forwarding
       ansible.posix.sysctl:
@@ -48,8 +53,8 @@
         block: |
           *nat
           :PREROUTING ACCEPT [0:0]
-          -A PREROUTING -p tcp --dport 80  -j REDIRECT --to-port 8000
-          -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 4343
+          -A PREROUTING -p tcp --dport 80  -j REDIRECT --to-port 8080
+          -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
           COMMIT
 
     - name: Enable UFW

@@ -2,7 +2,7 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-{% if cert_resolver == 'file' %}
+{% if cert_from_file %}
   file:
     filename: /etc/traefik/provider.yaml
 {% endif %}
@@ -13,14 +13,12 @@ log:
 api:
   dashboard: true
 
-{% if cert_resolver == 'lets_encrypt' %}
 certificatesResolvers:
   letsencrypt:
     acme:
       email: "{{ lets_encrypt_email }}"
       storage: "/acme.json"
       tlschallenge: true
-{% endif %}
 
 entrypoints:
   web:
@@ -34,5 +32,14 @@ entrypoints:
 {% endif %}
   websecure:
     address: ":443"
-  traefik:
-    address: ":8080"
+  dashboard:
+    address: ":9080"
+{% if force_https %}
+    http:
+      redirections:
+        entryPoint:
+          to: dashboardsecure
+          scheme: https
+{% endif %}
+  dashboardsecure:
+    address: ":9443"

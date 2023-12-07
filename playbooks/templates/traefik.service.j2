@@ -19,29 +19,34 @@ ExecStart=/usr/bin/podman run \
 	-d \
 	-v /run/user/1000/podman/podman.sock:/var/run/docker.sock \
 	-v /home/agent/traefik/traefik.yaml:/etc/traefik/traefik.yaml:ro \
-{% if cert_resolver == 'file' %}
+{% if cert_from_file %}
 	-v /home/agent/traefik/provider.yaml:/etc/traefik/provider.yaml:ro \
 	-v /home/agent/certificate/fullchain.pem:/etc/certificate/fullchain.pem:ro \
 	-v /home/agent/certificate/privkey.pem:/etc/certificate/privkey.pem:ro \
 {% endif %}
 	-v /home/agent/traefik/acme.json:/acme.json:rw \
-	-p 4343:443 \
-	-p 8000:80 \
-	-p 8080:8080 \
+	-p 8080:80 \
+	-p 8443:443 \
+	-p 9080:9080 \
+	-p 9443:9443 \
 	--label 'traefik.enable=true' \
-{% if dashboard_domain != '' %}
-	--label 'traefik.http.routers.dashboard-http.service=api@internal' \
-	--label 'traefik.http.routers.dashboard-http.entrypoints=web' \
-	--label 'traefik.http.routers.dashboard-http.rule=Host(`{{ dashboard_domain }}`)' \
-	--label 'traefik.http.routers.dashboard-https.service=api@internal' \
-	--label 'traefik.http.routers.dashboard-https.entrypoints=websecure' \
-	--label 'traefik.http.routers.dashboard-https.rule=Host(`{{ dashboard_domain }}`)' \
-{% if cert_resolver == 'file' %}
-	--label "traefik.http.routers.dashboard-https.tls=true" \
+	--label 'traefik.http.routers.dashboard.service=api@internal' \
+	--label 'traefik.http.routers.dashboardsecure.service=api@internal' \
+{% if cert_from_file %}
+	--label "traefik.http.routers.dashboardsecure.tls=true" \
+{% else %}
+	--label "traefik.http.routers.dashboardsecure.tls.certresolver=letsencrypt" \
 {% endif %}
-{% if cert_resolver == 'lets_encrypt' %}
-	--label "traefik.http.routers.dashboard-https.tls.certresolver=letsencrypt" \
-{% endif %}
+{% if dashboard_domain == '' %}
+	--label 'traefik.http.routers.dashboard.entrypoints=dashboard' \
+	--label 'traefik.http.routers.dashboard.rule=PathPrefix(`/`)' \
+	--label 'traefik.http.routers.dashboardsecure.entrypoints=dashboardsecure' \
+	--label 'traefik.http.routers.dashboardsecure.rule=PathPrefix(`/`)' \
+{% else %}
+	--label 'traefik.http.routers.dashboard.entrypoints=web' \
+	--label 'traefik.http.routers.dashboard.rule=Host(`{{ dashboard_domain }}`)' \
+	--label 'traefik.http.routers.dashboardsecure.entrypoints=websecure' \
+	--label 'traefik.http.routers.dashboardsecure.rule=Host(`{{ dashboard_domain }}`)' \
 {% endif %}
 	docker.io/library/traefik:v2.10
 ExecStop=/usr/bin/podman stop \
