@@ -47,9 +47,9 @@ ungrouped:
 Create the file `vars.yaml`.
 
 ```
-force_https: true
+force_https: false
 
-lets_encrypt_email: acme@tell.nu
+lets_encrypt_email: acme@example.com
 
 cert_from_file: true
 cert_fullchain: /etc/letsencrypt/live/example.com/fullchain.pem
