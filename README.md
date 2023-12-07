@@ -1,7 +1,39 @@
 # Traefik VM
-VM with Traefik and podman.
+VM with Traefik and Podman.
 
-## Before you start
+## SSH Setup
+
+Add the IP of your VM to `/etc/hosts`.
+
+```
+0.0.0.0 vm01
+```
+
+Create SSH-keys for the `agent` user.
+
+```
+$ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519-agent -C agent
+```
+
+Update your `~/.ssh/config`.
+
+```
+Match user root host vm01
+    IdentityFile ~/.ssh/id_ed25519-root
+
+Match user agent host vm01
+    IdentityFile ~/.ssh/id_ed25519-agent
+```
+
+Add your keys to the SSH-agent.
+
+```
+$ ssh-add ~/.ssh/id_ed22519-root
+
+$ ssh-add ~/.ssh/id_ed22519-agent
+```
+
+## Ansible setup
 
 Create the file `inventory.yaml`.
 
@@ -9,7 +41,7 @@ Create the file `inventory.yaml`.
 ungrouped:
   hosts:
     vm:
-      ansible_host: <HOST>
+      ansible_host: vm01
 ```
 
 Create the file `vars.yaml`.
@@ -20,41 +52,18 @@ force_https: false
 dashboard_domain: ''
 ```
 
-Create SSH key for the `agent` user.
+## Traefik VM Setup
+
+Run the playbook `playbooks/01_user.yaml`. This will create the `agent` user on the VM.
 
 ```
-$ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519-agent -C agent
-```
-
-## Setup VM
-
-Run the playbook `playbooks/01_user.yaml`.
-
-```
-$ ssh-add ~/.ssh/id_ed25519-root
-```
-
-```
-$ ansible-playbook \
-    -i inventory.yaml \
-    --private-key ~/.ssh/id_ed25519-root \
-    --extra-vars "agent_password=$(mkpasswd --method=sha-512)"
-    playbooks/01_user.yaml
+$ ansible-playbook -i inventory.yaml --extra-vars "agent_password=$(mkpasswd --method=sha-512)" playbooks/01_user.yaml
 ```
 
 Run all other playbooks.
 
 ```
-$ ssh-add ~/.ssh/id_ed25519-agent
-```
-
-```
-$ ansible-playbook \
-    -i inventory.yaml \
-    --private-key ~/.ssh/id_ed25519-agent \
-    --ask-become-pass \
-    --extra-vars "@vars.yaml" \
-    playbooks/0[2-5]*.yaml
+$ ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "@vars.yaml" playbooks/0[2-5]*.yaml
 ```
 
 ## Podman
@@ -62,28 +71,13 @@ $ ansible-playbook \
 Add a new podman connection.
 
 ```
-$ podman system connection add --identity=$HOME/.ssh/id_ed25519-agent vm ssh://agent@<HOST>/run/user/1000/podman/podman.sock
+$ podman system connection add vm01 ssh://agent@vm01/run/user/1000/podman/podman.sock
 ```
 
 Test the connection.
 
 ```
-$ podman -r -c vm version
-```
-
-Podman does not seem to play well with the ssh-agent.
-
-Update your `~/.ssh/config` file.
-
-```
-Match host <HOST> user agent
-    IdentityFile ~/.ssh/id_ed25519-agent
-```
-
-Add a new podman connection.
-
-```
-$ podman system connection add vm ssh://agent@0.0.0.0/run/user/1000/podman/podman.sock
+$ podman -r -c vm01 version
 ```
 
 ## Containers
@@ -91,10 +85,10 @@ $ podman system connection add vm ssh://agent@0.0.0.0/run/user/1000/podman/podma
 Start a demo container.
 
 ```
-podman -r -c vm run -d --rm --name httpd --network traefik \
+podman -r -c vm01 run -d --rm --name httpd --network traefik \
     --label 'traefik.enable=true' \
     --label 'traefik.http.routers.myrouter.rule=PathPrefix(`/`)' \
     docker.io/httpd
 ```
 
-Test it by visiting `http://<HOST>:80`
+Test it by visiting `http://vm01`
