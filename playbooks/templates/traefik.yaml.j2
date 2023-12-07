@@ -2,19 +2,25 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
+{% if cert_resolver == 'file' %}
+  file:
+    filename: /etc/traefik/provider.yaml
+{% endif %}
 
 log:
-  level: INFO
+  level: DEBUG
 
 api:
   dashboard: true
 
+{% if cert_resolver == 'lets_encrypt' %}
 certificatesResolvers:
   letsencrypt:
     acme:
       email: "{{ lets_encrypt_email }}"
       storage: "/acme.json"
       tlschallenge: true
+{% endif %}
 
 entrypoints:
   web:

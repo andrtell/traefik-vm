@@ -27,6 +27,12 @@
         src: traefik.yaml.j2
         dest: '/home/agent/traefik/traefik.yaml'
         mode: 0400
+
+    - name: Copy Traefik file provider
+      ansible.builtin.template:
+        src: provider.yaml.j2
+        dest: '/home/agent/traefik/provider.yaml'
+        mode: 0400
    
     - name: Create SystemD directory
       ansible.builtin.file:

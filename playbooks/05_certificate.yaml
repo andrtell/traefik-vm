@@ -1,0 +1,27 @@
+- name: Wildcard certificate
+
+  hosts: all
+  remote_user: agent
+
+  tasks:
+
+    - name: Create /certificate
+      ansible.builtin.file:
+        path: '/home/agent/certificate'
+        state: directory
+        mode: 0700
+      when: cert_resolver == 'file'
+
+    - name: Copy fullchain
+      ansible.builtin.copy:
+        src: '{{ cert_fullchain }}'
+        dest: '/home/agent/certificate/fullchain.pem'
+        mode: 0400
+      when: cert_resolver == 'file'
+
+    - name: Copy privkey
+      ansible.builtin.copy:
+        src: '{{ cert_privkey }}'
+        dest: '/home/agent/certificate/privkey.pem'
+        mode: 0400
+      when: cert_resolver == 'file'

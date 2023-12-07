@@ -47,9 +47,16 @@ ungrouped:
 Create the file `vars.yaml`.
 
 ```
-lets_encrypt_email: myemail@example.com
 force_https: false
-dashboard_domain: ''
+
+cert_resolver: file
+cert_fullchain: /etc/letsencrypt/live/example.com/fullchain.pem
+cert_privkey: /etc/letsencrypt/live/example.com/privkey.pem
+
+# cert_resolver: lets_encrypt
+# lets_encrypt_email: acme@example.com
+
+dashboard_domain: 'traefik.example.com'
 ```
 
 ## Traefik VM Setup
