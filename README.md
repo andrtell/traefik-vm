@@ -33,7 +33,7 @@ $ ssh-add ~/.ssh/id_ed22519-root
 $ ssh-add ~/.ssh/id_ed22519-agent
 ```
 
-## Ansible setup
+## Ansible
 
 Create the file `inventory.yaml`.
 
@@ -58,7 +58,7 @@ cert_privkey: /etc/letsencrypt/live/example.com/privkey.pem
 dashboard_domain: 'traefik.example.com'
 ```
 
-## Traefik VM Setup
+## Traefik VM
 
 Run the playbook `playbooks/01_user.yaml`. This will create the `agent` user on the VM.
 
