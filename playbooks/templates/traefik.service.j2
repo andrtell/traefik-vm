@@ -21,8 +21,8 @@ ExecStart=/usr/bin/podman run \
 	-v /home/agent/traefik/traefik.yaml:/etc/traefik/traefik.yaml:ro \
 {% if cert_from_file %}
 	-v /home/agent/traefik/provider.yaml:/etc/traefik/provider.yaml:ro \
-	-v /home/agent/certificate/fullchain.pem:/etc/certificate/fullchain.pem:ro \
-	-v /home/agent/certificate/privkey.pem:/etc/certificate/privkey.pem:ro \
+	-v /home/agent/certs/fullchain.pem:/etc/certs/fullchain.pem:ro \
+	-v /home/agent/certs/privkey.pem:/etc/certs/privkey.pem:ro \
 {% endif %}
 	-v /home/agent/traefik/acme.json:/acme.json:rw \
 	-p 8080:80 \
