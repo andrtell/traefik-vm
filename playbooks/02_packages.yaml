@@ -29,6 +29,5 @@
           - podman
           - netavark
           - aardvark-dns
-          - unattended-upgrades
         state: present
       notify: Reboot
