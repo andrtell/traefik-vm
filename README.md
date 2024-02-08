@@ -70,8 +70,17 @@ ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_
 Start a http server using podman remote (see `Basic VM`).
 
 ```
-podman -r -c vm01 run -d --rm --name httpd --network traefik --label 'traefik.enable=true' --label 'traefik.http.routers.myrouter.rule=PathPrefix(`/`)' docker.io/httpd
+podman -r -c vm01 run \
+  -d --rm --name httpd --network traefik \
+  --label 'traefik.enable=true' \
+  --label 'traefik.http.routers.httpd.rule=Host(`<YOUR-DOMAIN>`)' \
+  --label 'traefik.http.routers.httpd.entrypoints=websecure' \
+  --label 'traefik.http.routers.httpd.tls=true' \
+  --label 'traefik.http.routers.httpd.tls.certresolver=letsencrypt' \
+  docker.io/httpd
 ```
+
+(Replace `<YOUR-DOMAIN>` with your domain).
 
 Visit `https://<YOUR-DOMAIN>` to see if it works.
 
