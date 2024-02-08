@@ -1,0 +1,49 @@
+- name: Traefik
+
+  hosts: all
+  remote_user: agent
+
+  tasks:
+    
+    - name: Create Podman network for Traefik
+      containers.podman.podman_network:
+        name: traefik
+        state: present
+    
+    - name: Create traefik/
+      ansible.builtin.file:
+        path: '/home/agent/traefik'
+        state: directory
+        mode: 0700
+    
+    - name: Create acme.json
+      ansible.builtin.file:
+        path: '/home/agent/traefik/acme.json'
+        state: touch
+        mode: 0600
+    
+    - name: Copy traefik.yaml
+      ansible.builtin.template:
+        src: traefik.yaml.j2
+        dest: '/home/agent/traefik/traefik.yaml'
+        mode: 0400
+   
+    - name: Create SystemD user directory
+      ansible.builtin.file:
+        path: '/home/agent/.config/systemd/user'
+        state: directory
+        mode: 0700
+
+    - name: Copy Traefik SystemD service file
+      ansible.builtin.template:
+        src: traefik.service.j2
+        dest: '/home/agent/.config/systemd/user/traefik.service'
+        mode: 0400
+    
+    - name: Start & Enable the Traefik service
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        enabled: true
+        name: traefik
+        scope: user
+        state: restarted
