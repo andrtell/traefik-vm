@@ -80,3 +80,5 @@ When you are done
 ```
 podman -r -c vm01 stop httpd
 ```
+
+**OK, all done!**
