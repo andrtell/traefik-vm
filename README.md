@@ -80,9 +80,9 @@ podman -r -c vm01 run \
   docker.io/httpd
 ```
 
-(Replace `<YOUR-DOMAIN>` with your domain).
-
 Visit `https://<YOUR-DOMAIN>` to see if it works.
+
+(Replace `<YOUR-DOMAIN>` with your domain).
 
 To stop the server.
 
