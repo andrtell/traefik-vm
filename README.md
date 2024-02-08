@@ -21,7 +21,7 @@ Add a wildcard domain for your sub-domains (e.g `*.example.com`). The wildcard d
 
 **Warning**
 
-If you are updating existing DNS records, please wait a while (an hour or more) before running Traefik. It is very easy to hit the rate limit over at Lets Encrypt if your DNS records are not up to date.
+If you are updating existing DNS records, please wait a while (make note of TTL) before running Traefik. It is very easy to hit the rate limit over at Lets Encrypt if your DNS records are not up to date.
 
 ## Local setup
 
