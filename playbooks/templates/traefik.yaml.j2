@@ -11,7 +11,8 @@ certificatesResolvers:
     acme:
       email: "{{ lets_encrypt_email }}"
       storage: "/var/traefik/acme.json"
-      tlschallenge: true
+      httpChallenge:
+        entryPoint: web
 
 entrypoints:
   web:
