@@ -23,6 +23,10 @@ Add a wildcard domain for your sub-domains (e.g `*.example.com`). The wildcard d
 
 If you are updating existing DNS records, please wait a while (make note of TTL) before running Traefik. It is very easy to hit the rate limit over at Lets Encrypt if your DNS records are not up to date.
 
+**Example of some DNS A records**
+
+![Picture of DNS records](dns_a_records.png)
+
 ## Local setup
 
 ### Ansible
@@ -33,8 +37,6 @@ Ansible needs to know about your remote machine.
 
 Create the file `inventory.yaml` in the root folder of this repo.
 
-Make sure to replace `<YOUR-DOMAIN>` with your domain.
-
 ```
 ungrouped:
   hosts:
@@ -42,20 +44,23 @@ ungrouped:
       ansible_host: <YOUR-DOMAIN>
 ```
 
+(Replace `<YOUR-DOMAIN>` with your domain).
+
 ## Remote setup
 
 This step will be run as `agent`.
 
 You will be prompted for the `sudo` password you provided in the `Basic VM` setup.
 
-This step will install Traefik and configure the firewall on the remote machine.
+This step will install and start Traefik and configure the firewall on the remote machine.
 
-Lets encrypt will send informative emails to you. Make sure to replace `<YOUR-EMAIL>` with an actual email.
+Lets encrypt will send informative emails to you. 
 
 *Before you continue*
 
-Run all playbooks.
+Run all the playbooks.
 
 ```
 ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_email=<YOUR-EMAIL>" playbooks/*.yaml
 ```
+(Replace `<YOUR-EMAIL>` with your email).
