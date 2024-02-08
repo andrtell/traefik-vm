@@ -75,7 +75,7 @@ podman -r -c vm01 run -d --rm --name httpd --network traefik --label 'traefik.en
 
 Visit `https://<YOUR-DOMAIN>` to see if it works.
 
-When you are done
+To stop the server.
 
 ```
 podman -r -c vm01 stop httpd
