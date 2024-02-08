@@ -64,3 +64,19 @@ Run all the playbooks.
 ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_email=<YOUR-EMAIL>" playbooks/*.yaml
 ```
 (Replace `<YOUR-EMAIL>` with your email).
+
+## Test it
+
+Start a http server on your remote machine using podman remote (see `Basic VM`).
+
+```
+podman -r -c vm01 run -d --rm --name httpd --network traefik --label 'traefik.enable=true' --label 'traefik.http.routers.myrouter.rule=PathPrefix(`/`)' docker.io/httpd
+```
+
+Visit `https://<YOUR-DOMAIN>` to see if it works.
+
+When you are done
+
+```
+podman -r -c vm01 stop httpd
+```
