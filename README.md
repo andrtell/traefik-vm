@@ -13,15 +13,15 @@ This repo requires you to first setup you VM using [Basic VM](https://github.com
 
 ## Domain
 
-You need to register a domain name (e.g. `example.com`) and point it to your VM if you have not already. 
+Go ahead register a domain name (e.g. `example.com`) and point it to your VM if you have not already.
 
 **Optional (but recommended)**
 
-You could also add wildcard domain for your sub-domains (e.g `*.example.com`).
+Add a wildcard domain for your sub-domains (e.g `*.example.com`). The wildcard domain should resolve to the same IP as your top domain.
 
 **Warning**
 
-After updating your DNS records please wait a while (an hour or more) before running Traefik. It is very easy to hit the rate limit for Lets Encrypt if your DNS records are not up to date.
+If you are updating existing DNS records, please wait a while (an hour or more) before running Traefik. It is very easy to hit the rate limit over at Lets Encrypt if your DNS records are not up to date.
 
 ## Local setup
 
@@ -50,7 +50,7 @@ You will be prompted for the `sudo` password you provided in the `Basic VM` setu
 
 This step will install Traefik and configure the firewall on the remote machine.
 
-Make sure to replace `<YOUR-EMAIL>` with your email.
+Lets encrypt will send informative emails to you. Make sure to replace `<YOUR-EMAIL>` with an actual email.
 
 *Before you continue*
 
