@@ -1,31 +1,19 @@
 # Traefik VM
 
-Use [Ansible](https://docs.ansible.com/ansible/latest/index.html) to configure a remote machine running Ubuntu 22.04 LTS.
+Following the instructions in this repository you will configure a VM running Ubuntu 22.04 LTS
 
 Such that:
 
-- Traefik is installed and started as a SystemD user service.
+- Traefik will be running on the VM.
 - Certificates are automatically created and renewed by Treafik.
 - Network traffic on port 80 (http), 443 (https), 8080 (Treafik) and 8443 (Treafik) are allowed.
 - Traffic on port 80 is routed to port 8080, and traffic on port 443 is routed to port 8443.
 
-This repo requires you to first setup you VM using [Basic VM](https://github.com/andrtell/basic-vm). 
-
-## Domain
-
-Go ahead register a domain name (e.g. `example.com`) and point it to your VM if you have not already.
-
-**Optional (but recommended)**
-
-Add a wildcard domain for your sub-domains (e.g `*.example.com`). The wildcard domain should resolve to the same IP as your top domain.
+Before you start, you must first complete the setup in [Basic VM](https://github.com/andrtell/basic-vm). 
 
 **Warning**
 
-If you are updating existing DNS records, please wait a while (make note of TTL) before running Traefik. It is very easy to hit the rate limit over at Lets Encrypt if your DNS records are not up to date.
-
-**Example of some DNS A records**
-
-![Picture of DNS records](dns_a_records.png)
+If you are updating existing DNS records, please wait a while (make note of TTL) before running Traefik. It is very easy to hit the rate limit over at Lets Encrypt if cached DNS records are not up to date.
 
 ## Local setup
 
@@ -40,23 +28,17 @@ Create the file `inventory.yaml` in the root folder of this repo.
 ```
 ungrouped:
   hosts:
-    vm01:
+    vm:
       ansible_host: <DOMAIN>
 ```
 
-Replace:
-
-* `<DOMAIN>` with your top domain (e.g. `example.com`).
-
 ## Remote setup
 
-This step will be run as `agent`.
+This step will be run as `agent` on the VM.
 
-You will be prompted for the `sudo` password you provided in the [Basic VM](https://github.com/andrtell/basic-vm) setup.
+Ansible will prompt you for the password you provided in [Basic VM](https://github.com/andrtell/basic-vm) step 1.
 
-This step will install and start Traefik and configure the firewall on the remote machine.
-
-Lets encrypt will send informative emails to you. 
+The email you provide will be used by Lets encrypt.
 
 *Before you continue*
 
@@ -65,16 +47,13 @@ Run all the playbooks.
 ```
 ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_email=<EMAIL>" playbooks/*.yaml
 ```
-Replace:
 
-* `<EMAIL>` with the lets encrypt email (e.g. `acme@example.com`).
+*Then try to deploy a container*
 
-## Test it
-
-Start a http server using podman remote (see [Basic VM](https://github.com/andrtell/basic-vm)).
+See [Basic VM](https://github.com/andrtell/basic-vm) step 2 for how to setup a remote Podman connection (`-c vm`).
 
 ```
-podman -r -c vm01 run \
+podman -r -c vm run \
   -d --rm --name httpd --network traefik \
   --label 'traefik.enable=true' \
   --label 'traefik.http.routers.httpd.rule=Host(`<DOMAIN>`)' \
@@ -84,16 +63,10 @@ podman -r -c vm01 run \
   docker.io/httpd
 ```
 
-Visit `https://<DOMAIN>` to see if it works.
-
-Replace:
-
-* `<DOMAIN>` with the top domain (e.g. `example.com`).
-
 To stop the server.
 
 ```
-podman -r -c vm01 stop httpd
+podman -r -c vm stop httpd
 ```
 
 **OK, all done!**
