@@ -52,7 +52,7 @@ ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_
 
 Deploy a container on your VM.
 
-See [Basic VM](https://github.com/andrtell/basic-vm) step 2 for how to setup a remote Podman connection (`-c vm`).
+See [Basic VM](https://github.com/andrtell/basic-vm) step 2 for how to setup a remote Podman connection.
 
 ```
 podman -r -c vm run \
