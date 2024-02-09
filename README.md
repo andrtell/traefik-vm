@@ -44,7 +44,9 @@ ungrouped:
       ansible_host: <DOMAIN>
 ```
 
-(Replace `<DOMAIN>` with your domain e.g. `example.com`).
+Replace:
+
+* `<DOMAIN>` with your top domain (e.g. `example.com`).
 
 ## Remote setup
 
@@ -63,7 +65,9 @@ Run all the playbooks.
 ```
 ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_email=<EMAIL>" playbooks/*.yaml
 ```
-(Replace `<EMAIL>` with your email e.g. `acme@example.com`).
+Replace:
+
+* `<EMAIL>` with the lets encrypt email (e.g. `acme@example.com`).
 
 ## Test it
 
@@ -82,7 +86,9 @@ podman -r -c vm01 run \
 
 Visit `https://<DOMAIN>` to see if it works.
 
-(Replace `<DOMAIN>` with your domain e.g. `example.com`).
+Replace:
+
+* `<DOMAIN>` with the top domain (e.g. `example.com`).
 
 To stop the server.
 
