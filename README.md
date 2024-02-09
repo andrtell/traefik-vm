@@ -41,10 +41,10 @@ Create the file `inventory.yaml` in the root folder of this repo.
 ungrouped:
   hosts:
     vm01:
-      ansible_host: <YOUR-DOMAIN>
+      ansible_host: <DOMAIN>
 ```
 
-(Replace `<YOUR-DOMAIN>` with your domain).
+(Replace `<DOMAIN>` with your domain e.g. `example.com`).
 
 ## Remote setup
 
@@ -61,28 +61,28 @@ Lets encrypt will send informative emails to you.
 Run all the playbooks.
 
 ```
-ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_email=<YOUR-EMAIL>" playbooks/*.yaml
+ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_email=<EMAIL>" playbooks/*.yaml
 ```
-(Replace `<YOUR-EMAIL>` with your email).
+(Replace `<EMAIL>` with your email e.g. `acme@example.com`).
 
 ## Test it
 
-Start a http server using podman remote (see `Basic VM`).
+Start a http server using podman remote (see [Basic VM](https://github.com/andrtell/basic-vm)).
 
 ```
 podman -r -c vm01 run \
   -d --rm --name httpd --network traefik \
   --label 'traefik.enable=true' \
-  --label 'traefik.http.routers.httpd.rule=Host(`<YOUR-DOMAIN>`)' \
+  --label 'traefik.http.routers.httpd.rule=Host(`<DOMAIN>`)' \
   --label 'traefik.http.routers.httpd.entrypoints=websecure' \
   --label 'traefik.http.routers.httpd.tls=true' \
   --label 'traefik.http.routers.httpd.tls.certresolver=letsencrypt' \
   docker.io/httpd
 ```
 
-Visit `https://<YOUR-DOMAIN>` to see if it works.
+Visit `https://<DOMAIN>` to see if it works.
 
-(Replace `<YOUR-DOMAIN>` with your domain).
+(Replace `<DOMAIN>` with your domain e.g. `example.com`).
 
 To stop the server.
 
