@@ -48,7 +48,9 @@ Run all the playbooks.
 ansible-playbook -i inventory.yaml --ask-become-pass --extra-vars "lets_encrypt_email=<EMAIL>" playbooks/*.yaml
 ```
 
-*Then test Traefik setup by deploying a container on your VM*
+*Then confirm Traefik works on your VM*
+
+Deploy a container on your VM.
 
 See [Basic VM](https://github.com/andrtell/basic-vm) step 2 for how to setup a remote Podman connection (`-c vm`).
 
@@ -62,6 +64,8 @@ podman -r -c vm run \
   --label 'traefik.http.routers.httpd.tls.certresolver=letsencrypt' \
   docker.io/httpd
 ```
+
+Visit `https://<DOMAIN>`.
 
 To stop the server.
 
