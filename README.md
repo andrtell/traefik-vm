@@ -50,7 +50,7 @@ ungrouped:
 
 This step will be run as `agent`.
 
-You will be prompted for the `sudo` password you provided in the `Basic VM` setup.
+You will be prompted for the `sudo` password you provided in the [Basic VM](https://github.com/andrtell/basic-vm) setup.
 
 This step will install and start Traefik and configure the firewall on the remote machine.
 
